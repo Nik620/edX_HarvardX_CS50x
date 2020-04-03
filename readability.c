@@ -1,0 +1,114 @@
+#include <stdio.h>
+#include <cs50.h>
+#include <math.h>
+//#include <ctype.h>
+
+int count_letters(string text);
+int count_words(string text);
+int count_sentences(string text);
+
+int main(void)
+{
+    string text = get_string("Text: "); //user input
+    float l = count_letters(text); //number of letters
+    float w = count_words(text); //number of words
+    float s = count_sentences(text); //number of sentences
+    float L = (l / w) * 100;
+    float S = (s / w) * 100;
+    float index = round(0.0588 * L - 0.296 * S - 15.8); //Coleman-Liau index
+    
+    //test camp
+    //printf("letters %f\n", l);
+    //printf("words %f\n", w);
+    //printf("sentences %f\n", s);    
+    
+    if (index <= 16 && index >= 1)
+    {
+        printf("Grade %.0f\n", index);
+    }
+    else if (index < 1)
+    {
+        printf("Before Grade 1\n");
+    }
+    else
+    {
+        printf("Grade 16+\n");
+    }
+}
+
+int count_letters(string text) //subroutine to detect characters
+{
+    int ctr = 0; //counter for letters
+    int txt = 0; //conversion from text to decimal
+
+    for (int i = 0; text[i] != '\0'; i++)
+    {
+        txt = (int)text[i];
+        if ((txt >= 65 && txt <= 90) || (txt >= 97 && txt <= 122)) //capital letter
+        {
+            ctr++;
+        }
+    }
+
+    return ctr;
+}
+
+int count_words(string text) //subroutine to detect words
+{
+    int ctr = 0;
+    bool chk = false;
+    int txtp = 0; //first position
+    int txtn = 0; //second position
+
+    for (int i = 0; text[i] != '\0'; i++) //check first and second char value
+    {
+        txtp = (int)text[i];
+        txtn = (int)text[i + 1];
+        
+        if(txtp == 39 || txtp == 45 || txtn == 39 || txtn == 45)//chars ' & - not included
+        {
+            chk = false;
+            //printf("found\n");
+        }
+        else if ((txtp >= 65 && txtp <= 90) || (txtp >= 97 && txtp <= 122)) //letter chk
+        {
+            if (txtn < 65 || txtn > 122)
+            {
+                chk = true;
+            }
+            else if (txtn >= 90 && txtn <= 96)
+            {
+                chk = true;
+            }
+        }
+        else
+        {
+            chk = false;
+        }
+        
+        if (chk == true)
+        {
+           ctr++; 
+        }
+    }
+
+    return ctr;
+}
+
+int count_sentences(string text) //subroutine to detect sentences
+{
+    int ctr = 0;
+    int txt = 0;
+
+    for (int i = 0; text[i] != '\0'; i++)
+    {
+        txt = (int)text[i];
+        if (txt == 33 || txt == 46 || txt == 63)
+        {
+            ctr++;
+        }
+
+    }
+
+    return ctr;
+}
