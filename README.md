@@ -44,3 +44,6 @@ pong
 
 mario
 -modify from a source code for mario-type game to add stairs & flag at end of the level with lua & LoVE
+
+project
+-Final project called space race, see the readme in folder
